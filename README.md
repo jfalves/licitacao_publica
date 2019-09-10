@@ -7,15 +7,15 @@ INSTRUÇÕES PARA EXECUÇÃO
 3. alterar todas as conexões de banco no pentaho com a senha do usuário 'postgres' da sua máquina (stage, dimensão e fato);
 4. Executar os jobs de Scraping, Stage, Dimensão e Fato, nessa ordem.
 
-#1	Introdução
+#1	Introdução#
 
 Este documento tem por finalidade coletar, analisar e definir as principais necessidades do projeto do estudo de caso Auditoria de Licitações Públicas. O documento procura demonstrar os principais problemas atuais e o foco investigativo desejado pelo cliente.
 
 
 
-#2	Estudo de Caso
+#2	Estudo de Caso#
 
-##2.1	Descrição do Estudo de Caso
+##2.1	Descrição do Estudo de Caso##
 
 Desde de a Lei de Acesso à Informação – LAI, criada em 2012, os dados de administração pública devem ser abertos para a população, o que foi realizado através dos portais de transparência. Entre os motivos para tal, além da obrigação legal, estão a transparência pública, viabilização de novas negócios e a contribuição da sociedade com serviços inovadores ao cidadão.
 
@@ -29,11 +29,11 @@ Para tal foram utilizados os dados disponíveis no portal http://compras.dados.g
 
 
 
-#3	Descrição do Modelo Transacional
+#3	Descrição do Modelo Transacional#
 Os dados estão estruturados em arquivos textos, portanto não há um modelo relacional explícito, mesmo assim, segue o modelo de dados.
 
 
-##3.1	Fonte 1 – Licitações - http://compras.dados.gov.br/licitacoes/v1/licitacoes.csv
+##3.1	Fonte 1 – Licitações - http://compras.dados.gov.br/licitacoes/v1/licitacoes.csv##
 
 Fornece dados sobre licitações cadastradas, no formato csv (Comma-separated Values)
 
@@ -57,7 +57,7 @@ tipo_pregao	Tipo do Pregão.
 tipo_recurso	Tipo do Recurso.
 Uasg	Código da UASG.
 
-##3.2	Fonte 2 – Item Licitação - http://compras.dados.gov.br/licitacoes/id/licitacao/{id_licitacao}/itens.csv
+##3.2	Fonte 2 – Item Licitação - http://compras.dados.gov.br/licitacoes/id/licitacao/{id_licitacao}/itens.csv##
 
 Fornece uma lista das informações relacionadas aos registros do Item de licitação, no formato csv (Comma-separated Values)
 
@@ -81,7 +81,7 @@ unidade	Unidade.
 valor_estimado	Valor Estimado.
 
 
-##3.3	Fonte 3 – Contratos - http://compras.dados.gov.br/contratos/v1/contratos.csv
+##3.3	Fonte 3 – Contratos - http://compras.dados.gov.br/contratos/v1/contratos.csv##
 
 Fornece dados sobre contratos realizados, no formato csv (Comma-separated Values)
 
@@ -105,7 +105,7 @@ origem_licitacao	Origem da licitação que gerou o contrato: Preço praticado(SI
 Uasg	Campo de seis digitos que indica o código da UASG contratante.
 valor_inicial	Valor inicial do contrato.
 
-##3.4	Fonte 4 – Fornecedores - http://compras.dados.gov.br/fornecedores/v1/fornecedores.csv
+##3.4	Fonte 4 – Fornecedores - http://compras.dados.gov.br/fornecedores/v1/fornecedores.##
 
 Fornece dados sobre fornecedores, no formato csv (Comma-separated Values)
 
@@ -127,7 +127,7 @@ Porte da Empresa	Fornece dados sobre o porte do fornecedor.
 
 Ramo do Negócio	Fornece uma descrição detalhada relacionada a um ramo de negócio informado.
 
-##3.5	Fonte 5 – Materiais - http://compras.dados.gov.br/materiais/v1/materiais.csv
+##3.5	Fonte 5 – Materiais - http://compras.dados.gov.br/materiais/v1/materiais.csv##
 
 Fornece dados sobre materiais contratados, no formato csv (Comma-separated Values)
 
@@ -140,7 +140,7 @@ id_pdm	Código do padrão descritivo de material.
 Status	Indicador se o item é ou não ativo.
 Sustentável	Indicador se o item é ou não sustentável.
 
-##3.6	Fonte 6 – Serviços - http://compras.dados.gov.br/servicos/v1/servicos.html
+##3.6	Fonte 6 – Serviços - http://compras.dados.gov.br/servicos/v1/servicos.csv##
 
 Fornece dados sobre materiais contratados, no formato csv (Comma-separated Values)
 
@@ -156,65 +156,65 @@ Descrição	Descrição do serviço.
 unidade_medida	Unidade de medida do serviço.
 
 
-#4	Proposta de Processo de BI  
+#4	Proposta de Processo de BI#
 
 O processo de BI envolve um web-scraping da API de compras disponibilizada pelo governo, que ocorrerá mensalmente. Esse processo baixará os arquivos csv com os dados descritos na seção anterior.
 
 Após termos esses dados fisicamente, serão extraídos sem transformação para tabelas de Staging e com isso, lidos do banco e compilados no datamart estruturado no modelo estrela, para facilitar a consulta do aplicativo de visualização de dados.
 
-#5	Modelo Multidimensional
+#5	Modelo Multidimensional#
 
 Esta seção apresenta o modelo estrela (star schema) do estudo de caso Auditoria de Licitações Públicas.
 
 
-#6	Elaboração do Data Warehouse
+#6	Elaboração do Data Warehouse#
 
 O Data Warehouse será a fonte integradora de informações da empresa, a tecnologia será utilizada com o intuito de servir de base para a camada de aplicação que será responsável por fornecer dados para a tomada de decisão na organização.
 
-##6.1	Definição do DW
+##6.1	Definição do DW##
 
-###6.1.1	Arquitetura
+###6.1.1	Arquitetura###
 
 A arquitetura escolhida para a abordagem do problema foi um Data Mart isolado, ou seja, independente, uma vez que queremos responder uma pergunta muito específica dos dados de compra pública, a saber, quais foram as compras feitas através de licitações.
 
-###6.1.2	Abordagem de Construção
+###6.1.2	Abordagem de Construção###
 
 Como dito anteriormente, por se tratar de uma pergunta bem simples sobre os dados de compras públicas, o modelo botton-up pareceu mais adequado, podendo no futuro ser integrado em um modelo mais complexo de dados.
 
-###6.1.3	Arquitetura Física
+###6.1.3	Arquitetura Física###
 
 Como os dados de compras são públicos, não houve preferência na escolha da arquitetura física, tendo sido implementado um banco local por simplicidade.
 
-#7	Projeto de ETL
+#7	Projeto de ETL#
 
-##7.1	Descrição do Projeto de ETL
+##7.1	Descrição do Projeto de ETL##
 O projeto de ETL compreende 4 etapas que foram organizadas da seguinte forma na ferramenta PDI (Pentaho Data Integrator):
 Primeiro, é feito um scraping da api de compras do governo gerando arquivos físicos no formato csv. Esses arquivos contêm no máximo 500 linhas, pois é o limite fornecido pela API. Após esse processo o conteúdo dos arquivos é carregado sem transformações para as tabelas de stage, que devem ter seu formato e estrutura igual dos arquivos.
 Com isso é feito toda a parte da transformação dos dados lendo das stages e carregando nas respectivas dimensões. Uma vez carregado todas as dimensões, é feita a carga da tabela fato, que relaciona todas as dimensões previamente carregadas.
 Na pasta ”banco de dados” do projeto temos a estrutura a ser criada bem como um dump do banco de dados.
 
-#8	Dashboard
+#8	Dashboard#
 
-##8.1	Descrição da Elaboração
+##8.1	Descrição da Elaboração##
 Para a camada de visualização foi utilizado o software Power BI por sua simplicidade e conteúdo disponível na internet.
 
-##8.2	Telas do Dashboard
+##8.2	Telas do Dashboard##
 Foi desenvolvido uma tela que compila todos os dados coletados como quantidade de contratos, licitações, fornecedores e itens; Top 10 fornecedores e unidades administrativas por seus respectivos gastos, etc.
 Como filtro é possível selecionar se é uma material ou serviço prestado, qual unidade administrativa fez a compra, qual o estado brasileiro entre outros.
 
-#Conclusão
+#Conclusão#
 Com essa visão inicial dos dados de compras federais o grupo espera que pessoas se interessem e comecem a consultar gastos das unidade administrativas ou do estado em que vivem para que possam ser os olhos da auditoria e possam cobrar melhores práticas com o dinheiro que a princípio também é nosso.
 
-#9	Arquivos
+#9	Arquivos#
 
-##9.1	Pasta Banco de Dados
+##9.1	Pasta Banco de Dados##
 Contém a estrutura do banco de dados no formato sql e o dump do banco no formato tar.
 
-##9.2	Pasta Dados
+##9.2	Pasta Dados##
 Contém os arquivos csv baixados da api de compras do governo.
 
-##9.3	Pasta Documentação
+##9.3	Pasta Documentação##
 Contém esse arquivo bem como o modelo do data mart.
 
-##9.4	Pasta Pentaho
+##9.4	Pasta Pentaho##
 Contém as transformações e Jobs que fizeram a carga do projeto.
